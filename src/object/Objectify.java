@@ -11,9 +11,22 @@ package object;
  */
 public class Objectify {
 
-    public Object getTile() {
-       
-        return(null);
+    public int gridX(int x, int i) {
+        int pos = (int) Math.floor(x / 31);
+        if (pos < 38) {
+            return (pos);
+            
+        } else {
+            return (i);
+        }
     }
-    
+     public int gridY(int y, int i) {
+        int pos = (int) Math.floor(y / 31);
+        if (pos < 20) {
+            return (pos);
+            
+        } else {
+            return (i);
+        }
+    }
 }
