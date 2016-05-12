@@ -5,6 +5,7 @@
  */
 package object;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -34,9 +35,11 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     Image dbImage, master;
     private Graphics dbg;
     Timer timer;
-
+    int x, y, mX, mY;
     String[] picz = new String[5];
     Image[] img = new Image[5];
+
+    int[][][] grid = new int[38][20][1];
 
     public Object() {//program name
 
@@ -84,7 +87,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
         f.setVisible(true); //makes it visible
         f.setResizable(false);//makes in unsizable
-        f.setBounds(25, 25, 1184, 666);
+        f.setBounds(25, 25, 1185, 649);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    //stops program if you x out the window
     }
 // <editor-fold defaultstate="collapsed" desc="paint">
@@ -99,7 +102,17 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     public void paintComponent(Graphics g) {
         myPic = (Graphics2D) g;
+        for (int c = 0; c < 38; c++) {
+            for (int r = 0; r < 20; r++) {
+                myPic.setColor(Color.black);
+                myPic.drawRect(c * 31, r * 31, 31, 31);
 
+                if (grid[c][r][0] != 0) {
+                    myPic.setColor(Color.red);
+                    myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
+                }
+            }
+        }
     }
 
     @Override
@@ -131,12 +144,14 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mousePressed(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        x = m.gridX(e.getX(), x);
+        y = m.gridY(e.getY(), y);
+        grid[x][y][0] = 1;
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -153,7 +168,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        x = m.gridX(e.getX(), x);
+        y = m.gridY(e.getY(), y);
+        grid[x][y][0] = 1;
     }
 
     @Override
