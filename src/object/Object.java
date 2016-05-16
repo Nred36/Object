@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -39,7 +40,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
-    int[][][] grid = new int[38][20][1];
+    int[][][] grid = new int[36][20][1];
 
     public Object() {//program name
 
@@ -102,16 +103,23 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     public void paintComponent(Graphics g) {
         myPic = (Graphics2D) g;
-        for (int c = 0; c < 38; c++) {
+        for (int c = 0; c < 36; c++) {
             for (int r = 0; r < 20; r++) {
                 myPic.setColor(Color.black);
                 myPic.drawRect(c * 31, r * 31, 31, 31);
 
                 if (grid[c][r][0] != 0) {
-                    myPic.setColor(Color.red);
+                    myPic.setColor(m.getColour(grid[c][r][0]));
                     myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
                 }
             }
+        }
+        for (int i = 5; i < 15; i++) {
+            myPic.setColor(Color.black);
+            myPic.drawRect(1147, i * 31, 31, 31);
+
+            myPic.setColor(m.getColour(i - 5));
+            myPic.fillRect(1148, i * 31 + 1, 30, 30);
         }
     }
 
@@ -146,7 +154,16 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     public void mousePressed(MouseEvent e) {
         x = m.gridX(e.getX(), x);
         y = m.gridY(e.getY(), y);
-        grid[x][y][0] = 1;
+        int i = 0;
+        Rectangle m = new Rectangle(e.getX(), e.getY());
+        for (int y = 0; y < 10; y++) {
+            Rectangle r = new Rectangle(1147, i * 31, 31, 31);
+            if(m.intersects(r)){
+                i=y;
+            }
+        }
+
+        grid[x][y][0] = i;
 
     }
 
