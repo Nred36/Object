@@ -36,7 +36,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     Image dbImage, master;
     private Graphics dbg;
     Timer timer;
-    int x, y, mX, mY,col;
+    int x, y, mX, mY, col;
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
@@ -120,6 +120,13 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             myPic.setColor(m.getColour(i - 5));
             myPic.fillRect(1148, i * 31 + 1, 30, 30);
         }
+
+        myPic.setColor(Color.black);
+        myPic.drawRect(1127, 485, 51, 17);
+        myPic.drawString("Wipe", 1140, 498);
+        myPic.drawRect(1127, 512, 51, 17);
+        myPic.drawString("Save", 1140, 525);
+
     }
 
     @Override
@@ -157,9 +164,17 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         for (int y = 5; y < 15; y++) {
             Rectangle r = new Rectangle(1147, y * 31, 31, 31);
             if (m.intersects(r)) {
-                col = y-5;
-                System.out.println('f');
+                col = y - 5;                
             }
+        }
+        if (m.intersects(1127, 485, 51, 17)) {
+            for (int c = 0; c < 36; c++) {
+                for (int r = 0; r < 20; r++) {
+                    grid[c][r][0]=0;
+                }
+            }
+        } else if (m.intersects(1127, 512, 51, 17)) {
+
         }
         if (x != -1 && y != -1) {
             grid[x][y][0] = col;
@@ -187,12 +202,12 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     public void mouseDragged(MouseEvent e) {
         x = m.gridX(e.getX());
         y = m.gridY(e.getY());
-        
+
         Rectangle m = new Rectangle(e.getX(), e.getY());
         for (int y = 5; y < 15; y++) {
             Rectangle r = new Rectangle(1147, y * 31, 31, 31);
             if (m.intersects(r)) {
-                col = y-5;                
+                col = y - 5;
             }
         }
         if (x != -1 && y != -1) {
