@@ -36,7 +36,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     Image dbImage, master;
     private Graphics dbg;
     Timer timer;
-    int x, y, mX, mY;
+    int x, y, mX, mY,col;
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
@@ -108,10 +108,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 myPic.setColor(Color.black);
                 myPic.drawRect(c * 31, r * 31, 31, 31);
 
-                if (grid[c][r][0] != 0) {
-                    myPic.setColor(m.getColour(grid[c][r][0]));
-                    myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
-                }
+                myPic.setColor(m.getColour(grid[c][r][0]));
+                myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
+
             }
         }
         for (int i = 5; i < 15; i++) {
@@ -137,7 +136,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
@@ -152,18 +151,19 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mousePressed(MouseEvent e) {
-        x = m.gridX(e.getX(), x);
-        y = m.gridY(e.getY(), y);
-        int i = 0;
+        x = m.gridX(e.getX());
+        y = m.gridY(e.getY());
         Rectangle m = new Rectangle(e.getX(), e.getY());
-        for (int y = 0; y < 10; y++) {
-            Rectangle r = new Rectangle(1147, i * 31, 31, 31);
-            if(m.intersects(r)){
-                i=y;
+        for (int y = 5; y < 15; y++) {
+            Rectangle r = new Rectangle(1147, y * 31, 31, 31);
+            if (m.intersects(r)) {
+                col = y-5;
+                System.out.println('f');
             }
         }
-
-        grid[x][y][0] = i;
+        if (x != -1 && y != -1) {
+            grid[x][y][0] = col;
+        }
 
     }
 
@@ -185,13 +185,23 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        x = m.gridX(e.getX(), x);
-        y = m.gridY(e.getY(), y);
-        grid[x][y][0] = 1;
+        x = m.gridX(e.getX());
+        y = m.gridY(e.getY());
+        
+        Rectangle m = new Rectangle(e.getX(), e.getY());
+        for (int y = 5; y < 15; y++) {
+            Rectangle r = new Rectangle(1147, y * 31, 31, 31);
+            if (m.intersects(r)) {
+                col = y-5;                
+            }
+        }
+        if (x != -1 && y != -1) {
+            grid[x][y][0] = col;
+        }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 }

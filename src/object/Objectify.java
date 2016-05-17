@@ -13,30 +13,30 @@ import java.awt.Color;
  */
 public class Objectify {
 
-    public int gridX(int x, int i) {
+    public int gridX(int x) {
         int pos = (int) Math.floor(x / 31);
-        if (pos < 38) {
+        if (pos < 36) {
             return (pos);
 
         } else {
-            return (i);
+            return (-1);
         }
     }
 
-    public int gridY(int y, int i) {
+    public int gridY(int y) {
         int pos = (int) Math.floor(y / 31);
         if (pos < 20) {
             return (pos);
 
         } else {
-            return (i);
+            return (-1);
         }
     }
 
     public Color getColour(int i) {
         Color c;
         if (i == 0) {
-            c = new Color(255, 0, 0);
+            c = new Color(255, 255, 255);
         } else if (i == 1) {
             c = new Color(0, 255, 0);
         } else if (i == 2) {
