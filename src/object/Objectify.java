@@ -15,7 +15,7 @@ public class Objectify {
 
     public int gridX(int x, int m) {
         int pos = (int) Math.floor(x / 31);
-        if (m == 3) {
+        if (m == 3 || m == 4) {
             if (pos < 37) {
                 return (pos);
 
@@ -34,8 +34,8 @@ public class Objectify {
 
     public int gridY(int y, int m) {
         int pos = (int) Math.floor(y / 31);
-        if (m == 3) {
-            if (pos < 20) {
+        if (m == 3 || m == 4) {
+            if (pos < 21) {
                 return (pos);
 
             } else {

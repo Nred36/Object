@@ -40,7 +40,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
-    int[][][] grid = new int[36][20][2];
+    int[][][] grid = new int[37][21][2];
 
     public Object() {//program name
 
@@ -60,12 +60,12 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 img[i] = new ImageIcon(picz[i]).getImage();
             }
             br.readLine();
-            for (int c = 0; c < 36; c++) {
-                for (int r = 0; r < 20; r++) {
+            for (int c = 0; c < 37; c++) {
+                for (int r = 0; r < 21; r++) {
                     String temp = br.readLine();
                     String[] tempArray = temp.split(",");
                     for (int i = 0; i < tempArray.length; i++) {
-                        grid[c][r][i] = Integer.parseInt(tempArray[i]);                        
+                        grid[c][r][i] = Integer.parseInt(tempArray[i]);
                     }
                 }
             }
@@ -98,7 +98,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
         f.setVisible(true); //makes it visible
         f.setResizable(false);//makes in unsizable
-        f.setBounds(25, 25, 1185, 649);
+        f.setBounds(25, 10, 1185, 711);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    //stops program if you x out the window
     }
 // <editor-fold defaultstate="collapsed" desc="paint">
@@ -117,16 +117,18 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
          mode 0: menu
          mode 1: game
          mode 2: map
+         mode 3; place
          */
         if (mode != 0) {
-            for (int c = 0; c < 36; c++) {
-                for (int r = 0; r < 20; r++) {
-                    myPic.setColor(Color.black);
-                    myPic.drawRect(c * 31, r * 31, 31, 31);
+            for (int c = 0; c < 37; c++) {
+                for (int r = 0; r < 21; r++) {
+                    if (c < 36 && r < 20) {
+                        myPic.setColor(Color.black);
+                        myPic.drawRect(c * 31, r * 31, 31, 31);
 
-                    myPic.setColor(m.getColour(grid[c][r][0]));
-                    myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
-
+                        myPic.setColor(m.getColour(grid[c][r][0]));
+                        myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
+                    }
                     myPic.setColor(Color.black);
                     if (grid[c][r][1] == 1) {
                         myPic.fillRect(c * 31 - 6, r * 31 - 6, 15, 15);
@@ -152,6 +154,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         } else if (mode == 3) {
             myPic.setColor(Color.black);
             myPic.fillRect(x * 31 - 6, y * 31 - 6, 15, 15);
+        }else if (mode == 4) {
+            myPic.setColor(Color.black);
+            myPic.fillRect(x * 31, y * 31 - 4, 31, 9);
         }
     }
 
@@ -188,7 +193,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         y = m.gridY(e.getY(), mode);
 
         if (mode == 0) {
-            mode = 3;
+            mode = 4;
         } else if (mode == 1) {
 
         } else if (mode == 2) {
@@ -212,7 +217,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 grid[x][y][0] = col;
             }
         } else if (mode == 3) {
-            grid[x][y][1] = 1;
+            if (x != -1 && y != -1) {
+                grid[x][y][1] = 1;
+            }
         }
     }
 
