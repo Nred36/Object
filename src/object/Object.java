@@ -36,11 +36,11 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     Image dbImage, master;
     private Graphics dbg;
     Timer timer;
-    int x, y, mX, mY, col;
+    int x, y, mX, mY, col, mode;
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
-    int[][][] grid = new int[36][20][1];
+    int[][][] grid = new int[36][20][2];
 
     public Object() {//program name
 
@@ -58,6 +58,16 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             for (int i = 0; i < picz.length; i++) {
                 picz[i] = br.readLine();
                 img[i] = new ImageIcon(picz[i]).getImage();
+            }
+            br.readLine();
+            for (int c = 0; c < 36; c++) {
+                for (int r = 0; r < 20; r++) {
+                    String temp = br.readLine();
+                    String[] tempArray = temp.split(",");
+                    for (int i = 0; i < tempArray.length; i++) {
+                        grid[c][r][i] = Integer.parseInt(tempArray[i]);                        
+                    }
+                }
             }
             fr.close();
             br.close();
@@ -103,30 +113,46 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     public void paintComponent(Graphics g) {
         myPic = (Graphics2D) g;
-        for (int c = 0; c < 36; c++) {
-            for (int r = 0; r < 20; r++) {
-                myPic.setColor(Color.black);
-                myPic.drawRect(c * 31, r * 31, 31, 31);
+        /*
+         mode 0: menu
+         mode 1: game
+         mode 2: map
+         */
+        if (mode != 0) {
+            for (int c = 0; c < 36; c++) {
+                for (int r = 0; r < 20; r++) {
+                    myPic.setColor(Color.black);
+                    myPic.drawRect(c * 31, r * 31, 31, 31);
 
-                myPic.setColor(m.getColour(grid[c][r][0]));
-                myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
+                    myPic.setColor(m.getColour(grid[c][r][0]));
+                    myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
 
+                    myPic.setColor(Color.black);
+                    if (grid[c][r][1] == 1) {
+                        myPic.fillRect(c * 31 - 6, r * 31 - 6, 15, 15);
+                    }
+                }
             }
+
         }
-        for (int i = 5; i < 15; i++) {
+        if (mode == 2) {
+            for (int i = 5; i < 15; i++) {
+                myPic.setColor(Color.black);
+                myPic.drawRect(1147, i * 31, 31, 31);
+
+                myPic.setColor(m.getColour(i - 5));
+                myPic.fillRect(1148, i * 31 + 1, 30, 30);
+            }
+
             myPic.setColor(Color.black);
-            myPic.drawRect(1147, i * 31, 31, 31);
-
-            myPic.setColor(m.getColour(i - 5));
-            myPic.fillRect(1148, i * 31 + 1, 30, 30);
+            myPic.drawRect(1127, 485, 51, 17);
+            myPic.drawString("Wipe", 1140, 498);
+            myPic.drawRect(1127, 512, 51, 17);
+            myPic.drawString("Save", 1140, 525);
+        } else if (mode == 3) {
+            myPic.setColor(Color.black);
+            myPic.fillRect(x * 31 - 6, y * 31 - 6, 15, 15);
         }
-
-        myPic.setColor(Color.black);
-        myPic.drawRect(1127, 485, 51, 17);
-        myPic.drawString("Wipe", 1140, 498);
-        myPic.drawRect(1127, 512, 51, 17);
-        myPic.drawString("Save", 1140, 525);
-
     }
 
     @Override
@@ -158,28 +184,36 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mousePressed(MouseEvent e) {
-        x = m.gridX(e.getX());
-        y = m.gridY(e.getY());
-        Rectangle m = new Rectangle(e.getX(), e.getY());
-        for (int y = 5; y < 15; y++) {
-            Rectangle r = new Rectangle(1147, y * 31, 31, 31);
-            if (m.intersects(r)) {
-                col = y - 5;                
-            }
-        }
-        if (m.intersects(1127, 485, 51, 17)) {
-            for (int c = 0; c < 36; c++) {
-                for (int r = 0; r < 20; r++) {
-                    grid[c][r][0]=0;
+        x = m.gridX(e.getX(), mode);
+        y = m.gridY(e.getY(), mode);
+
+        if (mode == 0) {
+            mode = 3;
+        } else if (mode == 1) {
+
+        } else if (mode == 2) {
+            Rectangle m = new Rectangle(e.getX(), e.getY());
+            for (int y = 5; y < 15; y++) {
+                Rectangle r = new Rectangle(1147, y * 31, 31, 31);
+                if (m.intersects(r)) {
+                    col = y - 5;
                 }
             }
-        } else if (m.intersects(1127, 512, 51, 17)) {
+            if (m.intersects(1127, 485, 51, 17)) {
+                for (int c = 0; c < 36; c++) {
+                    for (int r = 0; r < 20; r++) {
+                        grid[c][r][0] = 0;
+                    }
+                }
+            } else if (m.intersects(1127, 512, 51, 17)) {
 
+            }
+            if (x != -1 && y != -1) {
+                grid[x][y][0] = col;
+            }
+        } else if (mode == 3) {
+            grid[x][y][1] = 1;
         }
-        if (x != -1 && y != -1) {
-            grid[x][y][0] = col;
-        }
-
     }
 
     @Override
@@ -200,8 +234,8 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        x = m.gridX(e.getX());
-        y = m.gridY(e.getY());
+        x = m.gridX(e.getX(), mode);
+        y = m.gridY(e.getY(), mode);
 
         Rectangle m = new Rectangle(e.getX(), e.getY());
         for (int y = 5; y < 15; y++) {
@@ -217,6 +251,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        mX = e.getX();
+        mY = e.getY();
+        x = m.gridX(e.getX(), mode);
+        y = m.gridY(e.getY(), mode);
     }
 }
