@@ -36,11 +36,11 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     Image dbImage, master;
     private Graphics dbg;
     Timer timer;
-    int x, y, mX, mY, col, mode;
+    int x, y, mX, mY, col, mode, p = 1;
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
-    int[][][] grid = new int[37][21][2];
+    int[][][] grid = new int[37][21][5];
 
     public Object() {//program name
 
@@ -133,6 +133,14 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                     if (grid[c][r][1] == 1) {
                         myPic.fillRect(c * 31 - 6, r * 31 - 6, 15, 15);
                     }
+                    if (grid[c][r][2] == 1) {
+                        myPic.fillRect(c * 31, r * 31 - 4, 31, 9);
+                    } else if (grid[c][r][2] == 2) {
+                        myPic.fillRect(c * 31 - 4, r * 31, 9, 31);
+                    } else if (grid[c][r][2] == 3) {
+                        myPic.fillRect(c * 31, r * 31 - 4, 31, 9);
+                        myPic.fillRect(c * 31 - 4, r * 31, 9, 31);
+                    }
                 }
             }
 
@@ -154,9 +162,13 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         } else if (mode == 3) {
             myPic.setColor(Color.black);
             myPic.fillRect(x * 31 - 6, y * 31 - 6, 15, 15);
-        }else if (mode == 4) {
+        } else if (mode == 4) {
             myPic.setColor(Color.black);
-            myPic.fillRect(x * 31, y * 31 - 4, 31, 9);
+            if (p == 1) {
+                myPic.fillRect(x * 31, y * 31 - 4, 31, 9);
+            } else {
+                myPic.fillRect(x * 31 - 4, y * 31, 9, 31);
+            }
         }
     }
 
@@ -174,7 +186,23 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_0) {
+            mode = 0;
+        } else if (e.getKeyCode() == KeyEvent.VK_1) {
+            mode = 1;
+        } else if (e.getKeyCode() == KeyEvent.VK_2) {
+            mode = 2;
+        } else if (e.getKeyCode() == KeyEvent.VK_3) {
+            mode = 3;
+        } else if (e.getKeyCode() == KeyEvent.VK_4) {
+            mode = 4;
+        } else if (e.getKeyCode() == KeyEvent.VK_5) {
+            mode = 5;
+        } else if (e.getKeyCode() == KeyEvent.VK_6) {
 
+        } else if (e.getKeyCode() == KeyEvent.VK_7) {
+
+        }
     }
 
     @Override
@@ -220,27 +248,47 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             if (x != -1 && y != -1) {
                 grid[x][y][1] = 1;
             }
+        } else if (mode == 4) {
+            if (e.getButton() == 1) {
+                if (x != -1 && y != -1) {
+                    if ((grid[x][y][2] == 1 && p == 2) || (grid[x][y][2] == 2 && p == 1)) {
+                        grid[x][y][2] = 3;
+                    } else {
+                        grid[x][y][2] = p;
+                    }
+                }
+            } else if (e.getButton() == 3) {
+                if (p == 1) {
+                    p = 2;
+                } else if (p == 2) {
+                    p = 1;
+                }
+            }
         }
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e
+    ) {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e
+    ) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 // <editor-fold defaultstate="collapsed" desc="mouse Exit">
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e
+    ) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 //</editor-fold>
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(MouseEvent e
+    ) {
         x = m.gridX(e.getX(), mode);
         y = m.gridY(e.getY(), mode);
 
@@ -257,7 +305,8 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(MouseEvent e
+    ) {
         mX = e.getX();
         mY = e.getY();
         x = m.gridX(e.getX(), mode);
