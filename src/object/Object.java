@@ -6,6 +6,7 @@
 package object;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -36,7 +37,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     Image dbImage, master;
     private Graphics dbg;
     Timer timer;
-    int x, y, mX, mY, col, mode, p = 1;
+    int x, y, mX, mY, col, mode, p = 1, turn = 0;
     String[] picz = new String[5];
     Image[] img = new Image[5];
 
@@ -79,9 +80,10 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         addMouseMotionListener(this);
         addKeyListener(this);
 
-        Timer run = new Timer(100, new ActionListener() {
+        Timer run = new Timer(10000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                turn++;
             }
         }
         );
@@ -134,16 +136,15 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                         myPic.fillRect(c * 31 - 6, r * 31 - 6, 15, 15);
                     }
                     if (grid[c][r][2] == 1) {
-                        myPic.fillRect(c * 31, r * 31 - 4, 31, 9);
+                        myPic.fillRect(c * 31, r * 31 - 4, 32, 9);
                     } else if (grid[c][r][2] == 2) {
-                        myPic.fillRect(c * 31 - 4, r * 31, 9, 31);
+                        myPic.fillRect(c * 31 - 4, r * 31, 9, 32);
                     } else if (grid[c][r][2] == 3) {
-                        myPic.fillRect(c * 31, r * 31 - 4, 31, 9);
-                        myPic.fillRect(c * 31 - 4, r * 31, 9, 31);
+                        myPic.fillRect(c * 31, r * 31 - 4, 32, 9);
+                        myPic.fillRect(c * 31 - 4, r * 31, 9, 32);
                     }
                 }
             }
-
         }
         if (mode == 2) {
             for (int i = 5; i < 15; i++) {
@@ -165,11 +166,24 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         } else if (mode == 4) {
             myPic.setColor(Color.black);
             if (p == 1) {
-                myPic.fillRect(x * 31, y * 31 - 4, 31, 9);
+                myPic.fillRect(x * 31, y * 31 - 4, 32, 9);
             } else {
-                myPic.fillRect(x * 31 - 4, y * 31, 9, 31);
+                myPic.fillRect(x * 31 - 4, y * 31, 9, 32);
             }
         }
+        myPic.drawString("Turn: " + turn, 1120, 15);
+        myPic.setFont(new Font("Dialog", Font.PLAIN, 15));
+        myPic.drawString("Inventory: ", 5, 636);
+        myPic.drawRect(2, 622, 390, 58);
+        myPic.fillRect(3 * 31 - 15, 20 * 31 + 5, 15, 15);
+        myPic.drawRect(394, 622, 390, 58);
+        myPic.drawRect(786, 622, 391, 58);
+
+        myPic.setColor(Color.white);
+        myPic.fillRect(3, 623, 389, 57);
+        myPic.fillRect(395, 623, 389, 57);
+        myPic.fillRect(787, 623, 390, 57);
+
     }
 
     @Override
@@ -217,14 +231,14 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mousePressed(MouseEvent e) {
-        x = m.gridX(e.getX(), mode);
-        y = m.gridY(e.getY(), mode);
+        x = m.gridX(e.getX(), mode, p);
+        y = m.gridY(e.getY(), mode, p);
 
         if (mode == 0) {
             mode = 4;
         } else if (mode == 1) {
 
-        } else if (mode == 2) {
+        } else if (mode == 2 && e.getButton() == 1) {
             Rectangle m = new Rectangle(e.getX(), e.getY());
             for (int y = 5; y < 15; y++) {
                 Rectangle r = new Rectangle(1147, y * 31, 31, 31);
@@ -244,7 +258,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             if (x != -1 && y != -1) {
                 grid[x][y][0] = col;
             }
-        } else if (mode == 3) {
+        } else if (mode == 3 && e.getButton() == 1) {
             if (x != -1 && y != -1) {
                 grid[x][y][1] = 1;
             }
@@ -289,8 +303,8 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     @Override
     public void mouseDragged(MouseEvent e
     ) {
-        x = m.gridX(e.getX(), mode);
-        y = m.gridY(e.getY(), mode);
+        x = m.gridX(e.getX(), mode, p);
+        y = m.gridY(e.getY(), mode, p);
 
         Rectangle m = new Rectangle(e.getX(), e.getY());
         for (int y = 5; y < 15; y++) {
@@ -309,7 +323,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     ) {
         mX = e.getX();
         mY = e.getY();
-        x = m.gridX(e.getX(), mode);
-        y = m.gridY(e.getY(), mode);
+        x = m.gridX(e.getX(), mode, p);
+        y = m.gridY(e.getY(), mode, p);
     }
 }
