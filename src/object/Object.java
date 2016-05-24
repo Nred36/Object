@@ -154,12 +154,15 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 myPic.setColor(m.getColour(i - 5));
                 myPic.fillRect(1148, i * 31 + 1, 30, 30);
             }
-
             myPic.setColor(Color.black);
             myPic.drawRect(1127, 485, 51, 17);
             myPic.drawString("Wipe", 1140, 498);
             myPic.drawRect(1127, 512, 51, 17);
             myPic.drawString("Save", 1140, 525);
+
+            myPic.drawRect(mX - 3, mY - 3, 16, 16);
+            myPic.setColor(m.getColour(col));
+            myPic.fillRect(mX - 2, mY - 2, 15, 15);
         } else if (mode == 3) {
             myPic.setColor(Color.black);
             myPic.fillRect(x * 31 - 6, y * 31 - 6, 15, 15);
@@ -171,6 +174,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 myPic.fillRect(x * 31 - 4, y * 31, 9, 32);
             }
         }
+        myPic.setColor(Color.black);
         myPic.drawString("Turn: " + turn, 1120, 15);
         myPic.setFont(new Font("Dialog", Font.PLAIN, 15));
         myPic.drawString("Inventory: ", 5, 636);
@@ -303,6 +307,8 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     @Override
     public void mouseDragged(MouseEvent e
     ) {
+        mX = e.getX();
+        mY = e.getY();
         x = m.gridX(e.getX(), mode, p);
         y = m.gridY(e.getY(), mode, p);
 
