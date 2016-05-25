@@ -20,7 +20,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.swing.ImageIcon;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
@@ -147,11 +149,11 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             }
         }
         if (mode == 2) {
-            for (int i = 5; i < 15; i++) {
+            for (int i = 4; i < 15; i++) {
                 myPic.setColor(Color.black);
                 myPic.drawRect(1147, i * 31, 31, 31);
 
-                myPic.setColor(m.getColour(i - 5));
+                myPic.setColor(m.getColour(i - 4));
                 myPic.fillRect(1148, i * 31 + 1, 30, 30);
             }
             myPic.setColor(Color.black);
@@ -239,25 +241,51 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         y = m.gridY(e.getY(), mode, p);
 
         if (mode == 0) {
-            mode = 4;
+            mode = 1;
         } else if (mode == 1) {
 
         } else if (mode == 2 && e.getButton() == 1) {
-            Rectangle m = new Rectangle(e.getX(), e.getY());
+            Rectangle m = new Rectangle(e.getX(), e.getY(), 1, 1);
             for (int y = 5; y < 15; y++) {
                 Rectangle r = new Rectangle(1147, y * 31, 31, 31);
                 if (m.intersects(r)) {
-                    col = y - 5;
+                    col = y - 4;
                 }
             }
-            if (m.intersects(1127, 485, 51, 17)) {
+            Rectangle r1 = new Rectangle(1127, 485, 51, 17);
+            Rectangle r2 = new Rectangle(1127, 512, 51, 17);
+            if (m.intersects(r1)) {
                 for (int c = 0; c < 36; c++) {
                     for (int r = 0; r < 20; r++) {
                         grid[c][r][0] = 0;
                     }
                 }
-            } else if (m.intersects(1127, 512, 51, 17)) {
+                System.out.println("Wiped");
+            } else if (m.intersects(r2)) {
+                try {
+                    FileReader fr = new FileReader("save.txt"); //reads from text file (located in "files"
+                    BufferedReader br = new BufferedReader(fr);
+                    //read and puts each line in the text document into a variable
 
+                    FileWriter fw = new FileWriter("save.txt");//set place to write to in "Files"
+                    PrintWriter pw = new PrintWriter(fw); //starts writing
+                    for (int i = 0; i < picz.length; i++) {
+                        pw.println(picz[i]);
+                    }
+                    pw.println("res, city, road");
+                    for (int c = 0; c < 37; c++) {
+                        for (int r = 0; r < 21; r++) {
+                            pw.println(grid[c][r][0] + ",0,0");
+                        }
+                    }
+                    pw.close();
+                    fw.close();
+                    fr.close();
+                    br.close();
+                    System.out.println("Saved");
+                } catch (IOException a) {
+                    System.out.println("ERROR");
+                }
             }
             if (x != -1 && y != -1) {
                 grid[x][y][0] = col;

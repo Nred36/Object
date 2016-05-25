@@ -54,23 +54,23 @@ public class Objectify {
     public Color getColour(int i) {
         Color c;
         if (i == 0) {
-            c = new Color(255, 255, 255);
+            c = new Color(0, 128, 0);//grass
         } else if (i == 1) {
-            c = new Color(0, 128, 0);
+            c = new Color(230, 231, 232);//stone
         } else if (i == 2) {
-            c = new Color(0, 0, 205);
+            c = new Color(0, 0, 205);//sea water
         } else if (i == 3) {
-            c = new Color(128, 0, 0);
+            c = new Color(255, 150, 50);//copper
         } else if (i == 4) {
-            c = new Color(0, 255, 255);
+            c = new Color(0, 205, 255);//fresh water
         } else if (i == 5) {
-            c = new Color(255, 0, 255);
+            c = new Color(45, 45, 45);//coal
         } else if (i == 6) {
-            c = new Color(127, 207, 12);
+            c = new Color(127, 207, 12);//forest
         } else if (i == 7) {
-            c = new Color(12, 127, 127);
+            c = new Color(175, 175, 175);//iron
         } else if (i == 8) {
-            c = new Color(127, 12, 127);
+            c = new Color(237, 201, 175);//sand
         } else if (i == 9) {
             c = new Color(200, 20, 93);
         } else if (i == 10) {
