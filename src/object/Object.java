@@ -121,7 +121,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
          mode 0: menu
          mode 1: game
          mode 2: map
-         mode 3; place
+         mode 3: 
+         mode 4: pipe
+         mode 5: start
          */
         if (mode != 0) {
             for (int c = 0; c < 37; c++) {
@@ -133,10 +135,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                         myPic.setColor(m.getColour(grid[c][r][0]));
                         myPic.fillRect(c * 31 + 1, r * 31 + 1, 30, 30);
                     }
-                    myPic.setColor(Color.black);
-                    if (grid[c][r][1] == 1) {
-                        myPic.fillRect(c * 31 - 6, r * 31 - 6, 15, 15);
-                    }
+                    myPic.setColor(Color.BLACK);
                     if (grid[c][r][2] == 1) {
                         myPic.fillRect(c * 31, r * 31 - 4, 32, 9);
                     } else if (grid[c][r][2] == 2) {
@@ -144,6 +143,13 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                     } else if (grid[c][r][2] == 3) {
                         myPic.fillRect(c * 31, r * 31 - 4, 32, 9);
                         myPic.fillRect(c * 31 - 4, r * 31, 9, 32);
+                    }
+                    myPic.setColor(Color.black);
+                    if (grid[c][r][1] == 1) {
+                        myPic.fillRect(c * 31 - 6, r * 31 - 6, 15, 15);
+                    } else if (grid[c][r][1] == 9) {
+                        myPic.setColor(m.getColour(9));
+                        myPic.fillRect(c * 31 - 7, r * 31 - 7, 17, 17);
                     }
                 }
             }
@@ -175,20 +181,27 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             } else {
                 myPic.fillRect(x * 31 - 4, y * 31, 9, 32);
             }
+        } else if (mode == 5) {
+            myPic.setColor(m.getColour(9));
+            myPic.fillRect(x * 31 - 7, y * 31 - 7, 17, 17);
         }
+        myPic.setColor(Color.white);
+        myPic.fillRect(3, 623, 389, 57);
+        myPic.fillRect(395, 623, 389, 57);
+        myPic.fillRect(787, 623, 390, 57);
+
         myPic.setColor(Color.black);
         myPic.drawString("Turn: " + turn, 1120, 15);
         myPic.setFont(new Font("Dialog", Font.PLAIN, 15));
         myPic.drawString("Inventory: ", 5, 636);
         myPic.drawRect(2, 622, 390, 58);
-        myPic.fillRect(3 * 31 - 15, 20 * 31 + 5, 15, 15);
+
+        for (int i = 0; i < 2; i++) {
+            myPic.fillRect(i * 25 + 78, 625, 15, 15);
+            myPic.fillRect(i * 25 + 81, 645, 9, 32);
+        }
         myPic.drawRect(394, 622, 390, 58);
         myPic.drawRect(786, 622, 391, 58);
-
-        myPic.setColor(Color.white);
-        myPic.fillRect(3, 623, 389, 57);
-        myPic.fillRect(395, 623, 389, 57);
-        myPic.fillRect(787, 623, 390, 57);
 
     }
 
@@ -232,7 +245,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (e.getButton() == 2) {
+            System.out.println(m.getName(grid[x][y][0]));
+        }
     }
 
     @Override
@@ -241,7 +256,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         y = m.gridY(e.getY(), mode, p);
 
         if (mode == 0) {
-            mode = 1;
+            mode = 5;
         } else if (mode == 1) {
 
         } else if (mode == 2 && e.getButton() == 1) {
@@ -291,7 +306,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 grid[x][y][0] = col;
             }
         } else if (mode == 3 && e.getButton() == 1) {
-            if (x != -1 && y != -1) {
+            if (x != -1 && y != -1 && grid[x][y][1] != 9) {
                 grid[x][y][1] = 1;
             }
         } else if (mode == 4) {
@@ -310,6 +325,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                     p = 1;
                 }
             }
+        } else if (mode == 5) {
+            grid[x][y][1] = 9;
+            mode = 1;
         }
     }
 

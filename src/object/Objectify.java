@@ -72,11 +72,41 @@ public class Objectify {
         } else if (i == 8) {
             c = new Color(237, 201, 175);//sand
         } else if (i == 9) {
-            c = new Color(200, 20, 93);
+            c = new Color(200, 20, 93);//start
         } else if (i == 10) {
             c = new Color(102, 32, 92);
         } else {
             c = new Color(0, 0, 0);
+        }
+        return (c);
+    }
+
+    public String getName(int i) {
+        String c;
+        if (i == 0) {
+            c = "Grass";
+        } else if (i == 1) {
+            c = "Stone";
+        } else if (i == 2) {
+            c = "Sea water";
+        } else if (i == 3) {
+            c = "Copper";
+        } else if (i == 4) {
+            c = "Fresh water";
+        } else if (i == 5) {
+            c = "Coal";
+        } else if (i == 6) {
+            c = "Forest";
+        } else if (i == 7) {
+            c = "Iron";
+        } else if (i == 8) {
+            c = "Sand";
+        } else if (i == 9) {
+            c = "Start";
+        } else if (i == 10) {
+            c = "";
+        } else {
+            c = "";
         }
         return (c);
     }
