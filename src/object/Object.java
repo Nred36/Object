@@ -218,7 +218,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 //myPic.drawString(machine[i], 220, i * 29 + 140);
                 myPic.drawString("Buy", 665, i * 35 + 140);
                 myPic.drawRect(663, i * 35 + 128, 23, 15);
-                myPic.drawString("" + "", 345, i * 29 + 140);
+                myPic.drawString(buy[i] + "", 345, i * 29 + 140);
             }
         }
         myPic.setColor(Color.white);
