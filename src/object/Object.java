@@ -42,6 +42,8 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     int x, y, mX, mY, col, mode, p = 1, turn = 0;
     String[] picz = new String[5];
     Image[] img = new Image[5];
+    int items[] = new int[11];
+    String buy[] = new String[10];
 
     int[][][] grid = new int[37][21][5];
 
@@ -62,6 +64,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 picz[i] = br.readLine();
                 img[i] = new ImageIcon(picz[i]).getImage();
             }
+            for (int i = 0; i < 4; i++) {
+                items[i] = Integer.parseInt(br.readLine());
+            }
             br.readLine();
             for (int c = 0; c < 37; c++) {
                 for (int r = 0; r < 21; r++) {
@@ -71,6 +76,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                         grid[c][r][i] = Integer.parseInt(tempArray[i]);
                     }
                 }
+            }
+            for (int i = 0; i < 10; i++) {
+                buy[i] = br.readLine();
             }
             fr.close();
             br.close();
@@ -82,10 +90,25 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         addMouseMotionListener(this);
         addKeyListener(this);
 
-        Timer run = new Timer(10000, new ActionListener() {
+        Timer run = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 turn++;
+                for (int c = 0; c < 37; c++) {
+                    for (int r = 0; r < 21; r++) {
+                        if (grid[c][r][1] == 1) {
+                            items[grid[c][r][0] + 2]++;
+                            items[grid[c - 1][r][0] + 2]++;
+                            items[grid[c][r - 1][0] + 2]++;
+                            items[grid[c - 1][r - 1][0] + 2]++;
+                        } else if (grid[c][r][1] == 9) {
+                            items[grid[c][r][0] + 2] += 2;
+                            items[grid[c - 1][r][0] + 2] += 2;
+                            items[grid[c][r - 1][0] + 2] += 2;
+                            items[grid[c - 1][r - 1][0] + 2] += 2;
+                        }
+                    }
+                }
             }
         }
         );
@@ -124,6 +147,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
          mode 3: 
          mode 4: pipe
          mode 5: start
+         mode 6: buy menu
          */
         if (mode != 0) {
             for (int c = 0; c < 37; c++) {
@@ -150,6 +174,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                     } else if (grid[c][r][1] == 9) {
                         myPic.setColor(m.getColour(9));
                         myPic.fillRect(c * 31 - 7, r * 31 - 7, 17, 17);
+
                     }
                 }
             }
@@ -184,6 +209,17 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         } else if (mode == 5) {
             myPic.setColor(m.getColour(9));
             myPic.fillRect(x * 31 - 7, y * 31 - 7, 17, 17);
+        } else if (mode == 6) {
+            myPic.setColor(Color.white);
+            myPic.fillRect(getWidth() / 2 - 249, 50, 499, 499);
+            myPic.setColor(Color.black);
+            myPic.drawRect(getWidth() / 2 - 250, 50, 500, 500);
+            for (int i = 0; i < 10; i++) {
+                //myPic.drawString(machine[i], 220, i * 29 + 140);
+                myPic.drawString("Buy", 665, i * 35 + 140);
+                myPic.drawRect(663, i * 35 + 128, 23, 15);
+                myPic.drawString("" + "", 345, i * 29 + 140);
+            }
         }
         myPic.setColor(Color.white);
         myPic.fillRect(3, 623, 389, 57);
@@ -196,9 +232,19 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         myPic.drawString("Inventory: ", 5, 636);
         myPic.drawRect(2, 622, 390, 58);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < items[0]; i++) {
             myPic.fillRect(i * 25 + 78, 625, 15, 15);
+        }
+        for (int i = 0; i < items[1]; i++) {
             myPic.fillRect(i * 25 + 81, 645, 9, 32);
+        }
+        for (int i = 0; i < items.length - 2; i++) {
+            myPic.setFont(new Font("Dialog", Font.PLAIN, 12));
+            myPic.setColor(Color.BLACK);
+            myPic.drawRect(1124, i * 22 + 119, 16, 16);
+            myPic.setColor(m.getColour(i));
+            myPic.fillRect(1125, i * 22 + 120, 15, 15);
+            myPic.drawString(items[i + 2] + "", 1150, i * 22 + 133);
         }
         myPic.drawRect(394, 622, 390, 58);
         myPic.drawRect(786, 622, 391, 58);
@@ -232,9 +278,11 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         } else if (e.getKeyCode() == KeyEvent.VK_5) {
             mode = 5;
         } else if (e.getKeyCode() == KeyEvent.VK_6) {
-
+            mode = 6;
         } else if (e.getKeyCode() == KeyEvent.VK_7) {
 
+        } else if (e.getKeyCode() == KeyEvent.VK_TAB) {
+            mode = 6;
         }
     }
 
@@ -254,13 +302,21 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     public void mousePressed(MouseEvent e) {
         x = m.gridX(e.getX(), mode, p);
         y = m.gridY(e.getY(), mode, p);
-
+        Rectangle m = new Rectangle(e.getX(), e.getY(), 1, 1);
         if (mode == 0) {
             mode = 5;
         } else if (mode == 1) {
-
+            for (int i = 0; i < items[0]; i++) {
+                if (m.intersects(i * 25 + 78, 625, 15, 15)) {
+                    mode = 3;
+                }
+            }
+            for (int i = 0; i < items[1]; i++) {
+                if (m.intersects(i * 25 + 81, 645, 9, 32)) {
+                    mode = 4;
+                }
+            }
         } else if (mode == 2 && e.getButton() == 1) {
-            Rectangle m = new Rectangle(e.getX(), e.getY(), 1, 1);
             for (int y = 5; y < 15; y++) {
                 Rectangle r = new Rectangle(1147, y * 31, 31, 31);
                 if (m.intersects(r)) {
@@ -308,14 +364,20 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
         } else if (mode == 3 && e.getButton() == 1) {
             if (x != -1 && y != -1 && grid[x][y][1] != 9) {
                 grid[x][y][1] = 1;
+                items[0] -= 1;
+                mode = 1;
             }
         } else if (mode == 4) {
             if (e.getButton() == 1) {
                 if (x != -1 && y != -1) {
                     if ((grid[x][y][2] == 1 && p == 2) || (grid[x][y][2] == 2 && p == 1)) {
                         grid[x][y][2] = 3;
+                        items[1] -= 1;
+                        mode = 1;
                     } else {
                         grid[x][y][2] = p;
+                        items[1] -= 1;
+                        mode = 1;
                     }
                 }
             } else if (e.getButton() == 3) {
@@ -326,8 +388,10 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 }
             }
         } else if (mode == 5) {
-            grid[x][y][1] = 9;
-            mode = 1;
+            if (x != -1 && y != -1) {
+                grid[x][y][1] = 9;
+                mode = 1;
+            }
         }
     }
 

@@ -3,6 +3,10 @@ pic2
 pic3
 pic4
 pic5
+2
+2
+0
+0
 res, city, road
 1,0,0
 1,0,0
@@ -781,3 +785,5 @@ res, city, road
 0,0,0
 0,0,0
 0,0,0
+road
+city
