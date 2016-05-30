@@ -785,5 +785,5 @@ res, city, road
 0,0,0
 0,0,0
 0,0,0
-road
-city
+road,6,1,0,0,0,0
+city,1,2,0,0,0,0

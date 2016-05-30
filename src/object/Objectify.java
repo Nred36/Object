@@ -88,11 +88,11 @@ public class Objectify {
         } else if (i == 1) {
             c = "Stone";
         } else if (i == 2) {
-            c = "Sea water";
+            c = "Sea";
         } else if (i == 3) {
             c = "Copper";
         } else if (i == 4) {
-            c = "Fresh water";
+            c = "Water";
         } else if (i == 5) {
             c = "Coal";
         } else if (i == 6) {

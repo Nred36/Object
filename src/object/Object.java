@@ -43,7 +43,7 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
     String[] picz = new String[5];
     Image[] img = new Image[5];
     int items[] = new int[11];
-    String buy[] = new String[10];
+    String buy[][] = new String[7][10];
 
     int[][][] grid = new int[37][21][5];
 
@@ -77,9 +77,15 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                     }
                 }
             }
-            for (int i = 0; i < 10; i++) {
-                buy[i] = br.readLine();
+
+            for (int i = 0; i < 2; i++) {
+                String temp = br.readLine();
+                String[] tempArray = temp.split(",");
+                for (int t = 0; t < tempArray.length; t++) {
+                    buy[i][t] = tempArray[t];
+                }
             }
+            br.readLine();
             fr.close();
             br.close();
         } catch (IOException a) {
@@ -149,7 +155,9 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
          mode 5: start
          mode 6: buy menu
          */
-        if (mode != 0) {
+        if (mode == 0) {
+
+        } else {
             for (int c = 0; c < 37; c++) {
                 for (int r = 0; r < 21; r++) {
                     if (c < 36 && r < 20) {
@@ -214,11 +222,17 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
             myPic.fillRect(getWidth() / 2 - 249, 50, 499, 499);
             myPic.setColor(Color.black);
             myPic.drawRect(getWidth() / 2 - 250, 50, 500, 500);
-            for (int i = 0; i < 10; i++) {
-                //myPic.drawString(machine[i], 220, i * 29 + 140);
-                myPic.drawString("Buy", 665, i * 35 + 140);
-                myPic.drawRect(663, i * 35 + 128, 23, 15);
-                myPic.drawString(buy[i] + "", 345, i * 29 + 140);
+            for (int r = 0; r < 2; r++) {
+                for (int c = 0; c < 7; c++) {
+                    myPic.drawString("Buy", 665, r * 29 + 140);
+                    myPic.drawRect(663, r * 29 + 128, 23, 15);
+                    if (c == 0) {
+                        myPic.drawString(buy[r][c] + "", 345 + c * 47, r * 29 + 140);
+                    } else {
+                        myPic.drawString(m.getName(Integer.parseInt(buy[r][c])), 345 + c * 47, r * 29 + 140);
+                    }
+
+                }
             }
         }
         myPic.setColor(Color.white);
@@ -392,6 +406,18 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
                 grid[x][y][1] = 9;
                 mode = 1;
             }
+        } else if (mode == 6) {
+            for (int r = 0; r < 10; r++) {
+                Rectangle b = new Rectangle(663, r * 29 + 128, 23, 15);
+                if (m.intersects(b)) {
+                    for (int c = 1; c < 7; c++) {
+                        if (items[Integer.parseInt(buy[r][c])]>0) {
+                            System.out.println("F");
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -415,28 +441,27 @@ public class Object extends JApplet implements ActionListener, KeyListener, Mous
 //</editor-fold>
 
     @Override
-    public void mouseDragged(MouseEvent e
-    ) {
+    public void mouseDragged(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
         x = m.gridX(e.getX(), mode, p);
         y = m.gridY(e.getY(), mode, p);
-
-        Rectangle m = new Rectangle(e.getX(), e.getY());
-        for (int y = 5; y < 15; y++) {
-            Rectangle r = new Rectangle(1147, y * 31, 31, 31);
-            if (m.intersects(r)) {
-                col = y - 5;
+        if (mode == 2) {
+            Rectangle m = new Rectangle(e.getX(), e.getY());
+            for (int y = 5; y < 15; y++) {
+                Rectangle r = new Rectangle(1147, y * 31, 31, 31);
+                if (m.intersects(r)) {
+                    col = y - 5;
+                }
             }
-        }
-        if (x != -1 && y != -1) {
-            grid[x][y][0] = col;
+            if (x != -1 && y != -1) {
+                grid[x][y][0] = col;
+            }
         }
     }
 
     @Override
-    public void mouseMoved(MouseEvent e
-    ) {
+    public void mouseMoved(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
         x = m.gridX(e.getX(), mode, p);
